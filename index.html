@@ -440,10 +440,15 @@ function updateNeedle(id, did, d, dayOffset) {
     dateBox.innerText = fDate(d);
     dateBox.style.transform = `rotate(${-angle}deg)`; 
     
-    let normalizedAngle = ((angle % 360) + 360) % 360;
+    // คำนวณองศาให้แม่นยำ ตกอยู่ในช่วง 0 - 359 เสมอ
+    let normalizedAngle = angle % 360;
+    if (normalizedAngle < 0) {
+        normalizedAngle += 360;
+    }
     
     let textContent = mainNeedle.querySelector('.text-content');
     if (textContent) {
+        // ถ้าเข็มชี้ลงด้านล่าง (มุมระหว่าง 90 ถึง 270 องศา) ให้พลิก 180 องศา
         if (normalizedAngle > 90 && normalizedAngle < 270) {
             textContent.style.transform = "rotate(180deg)"; 
         } else {
