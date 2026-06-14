@@ -138,13 +138,14 @@
             color: rgb(14, 13, 13);
             font-size: 12px;          
             font-weight: bold;
+            writing-mode: vertical-rl;
+            text-orientation: mixed; 
             border-radius: 5px;       
             box-shadow: 2px 2px 5px rgba(0,0,0,0.2); 
             position: relative;
             z-index: 10;
         }
 
-        /* ⚡ กล่องสำหรับหมุนเฉพาะข้อความ ⚡ */
         .text-content {
             display: inline-block;
             transition: transform 0.3s ease;
@@ -193,24 +194,24 @@
         <h2 style="margin-top: 0; color: #002d62;">Gyne-Wheel </h2>
         <label>น้ำหนักตัว (kg):</label><input type="number" id="w" value="50">
         
-        <label>วันที่ประจำเดือนมาปกติ:</label><input type="date" id="p-date" onchange="updateTDate()">
+        <label>วันที่ประจำเดือนมาปกติ:</label><input type="date" id="p-date">
         
         <div class="option-box">
             <label style="color:#0369a1; font-weight:600;">ต้องการเลื่อนออกไป (จำนวนวัน):</label>
-            <input type="number" id="delay-days" placeholder="เช่น 5" oninput="updateTDate()" style="margin-bottom: 4px;">
+            <input type="number" id="delay-days" placeholder="เช่น 5" style="margin-bottom: 4px;">
             
             <div style="text-align:center; font-size:12px; color:#64748b; margin: 8px 0;">--- หรือ ---</div>
             
             <label style="color:#0369a1; font-weight:600;">เลือกวันที่ต้องการให้มา:</label>
-            <input type="date" id="t-date" onchange="updateDelayDays()" style="margin-top: 4px;">
+            <input type="date" id="t-date" style="margin-top: 4px;">
         </div>
         
-        <button onclick="phase1()" style="background:#002d62; color:white;font-weight:600; padding: 15px;">ขั้นที่ 1: ช่วงเวลาที่ควรรับประทานยา</button>
+        <button type="button" onclick="phase1()" style="background:#002d62; color:white;font-weight:600; padding: 15px;">ขั้นที่ 1: ช่วงเวลาที่ควรรับประทานยา</button>
         <div id="gold-window" style="font-weight:600; color:#002d62; margin:18px 0; text-align: center;"></div>
         
         <div id="p2" style="display:none; border-top:1px solid #ccc; padding-top:20px; margin-top: 15px;">
             <label>เลือกวันเริ่มรับประทานยาจริง:</label><input type="date" id="s-actual">
-            <button onclick="phase2()" style="background:#002d62; color:white;font-weight:600; padding: 15px;">ขั้นที่ 2: สรุปผลการจ่ายยา</button>
+            <button type="button" onclick="phase2()" style="background:#002d62; color:white;font-weight:600; padding: 15px;">ขั้นที่ 2: สรุปผลการจ่ายยา</button>
         </div>
         
         <div id="res" class="res-box"></div>
@@ -258,7 +259,6 @@ for(let i=0; i<31; i++) {
     svg.innerHTML += `<line x1="${300+280*Math.cos((ang-90)*Math.PI/180)}" y1="${300+280*Math.sin((ang-90)*Math.PI/180)}" x2="${300+250*Math.cos((ang-90)*Math.PI/180)}" y2="${300+250*Math.sin((ang-90)*Math.PI/180)}" stroke="white" stroke-width="2"/>`;
 }
 
-// ฟังก์ชันแปลงวันที่ให้เวลาเป็นเที่ยงคืนตรง เพื่อลดปัญหา Timezone ปัดเศษวันเพี้ยน
 function getCleanDate(dateString) {
     if (!dateString) return null;
     let parts = dateString.split('-');
@@ -294,7 +294,7 @@ function updateDelayDays() {
     if (pInput && tInput) {
         let p = getCleanDate(pInput);
         let t = getCleanDate(tInput);
-        let diffDays = Math.round((t - p) / 864e5); 
+        let diffDays = Math.round((t.getTime() - p.getTime()) / 864e5); 
         document.getElementById('delay-days').value = diffDays;
     }
 }
@@ -305,6 +305,22 @@ function fDate(d) {
 }
 
 function phase1() {
+    // ⚡ บังคับให้อัปเดตข้อมูลก่อนเริ่มทำงานเสมอ
+    // เช็คว่าผู้ใช้กรอกอะไรล่าสุด เพื่ออัปเดตให้ถูกต้อง
+    if (document.activeElement.id === 'delay-days') {
+        updateTDate();
+    } else if (document.activeElement.id === 't-date') {
+        updateDelayDays();
+    } else {
+        // Default sync if not specifically focused
+        if (document.getElementById('delay-days').value !== "") {
+            updateTDate();
+        } else if (document.getElementById('t-date').value !== "") {
+             updateDelayDays();
+        }
+    }
+
+
     const pInput = document.getElementById('p-date').value;
     const tInput = document.getElementById('t-date').value;
     
@@ -333,7 +349,6 @@ function phase1() {
     document.getElementById('n-magenta').style.opacity = '1';
     document.getElementById('n-cyan').style.opacity = '0';
     
-    // ฟังก์ชันคำนวณส่วนต่างวันให้แม่นยำ
     const getDiff = (d) => Math.round((d.getTime() - p.getTime()) / 864e5);
     
     updateNeedle('n-green', 'd-green', windowStart, -5);
@@ -373,13 +388,11 @@ function phase2() {
     
     let totalDelayDays = 0;
     if (t >= p) {
-         totalDelayDays = Math.round((t - p) / 864e5);
+         totalDelayDays = Math.round((t.getTime() - p.getTime()) / 864e5);
     }
     
     let days = 0;
     if (orangeDate >= s) {
-        // คำนวณแบบตรงไปตรงมา: วันหยุดยา ลบ วันเริ่มกินยา จะได้จำนวนวันที่ต้องกินพอดี
-        // (เช่น เริ่ม 17 หยุด 24 -> 24 - 17 = 7 วัน)
         days = Math.floor((orangeDate.getTime() - s.getTime()) / 864e5); 
     }
     
@@ -399,7 +412,7 @@ function phase2() {
     
     document.getElementById('res').innerHTML = `
         ${warningHTML}
-        <div class="res-item" style="background:#e0f2fe; color:#0369a1; font-weight:bold;">สรุป: ต้องการเลื่อนประจำเดือนทั้งหมด ${totalDelayDays} วัน</div>
+        <div class="res-item" style="background:#e0f2fe; color:#0369a1; font-weight:bold;">ต้องการเลื่อนประจำเดือนทั้งหมด ${totalDelayDays} วัน</div>
         <div class="res-item" style="background:#FFFFFF; color:#002d62;"><b>จำนวนวันที่ต้องกินยา:</b> ${days} วัน</div>
         <div class="res-item" style="background:#FFFFFF; color:#002d62;"><b>จำนวนเม็ดยา:</b> ${pills} เม็ด</div>
         <div class="res-item" style="background:#FFFFFF; color:#002d62;"><b>วิธีทาน:</b> ${dose} เม็ด/วัน</div>
@@ -429,7 +442,6 @@ function updateNeedle(id, did, d, dayOffset) {
     
     let normalizedAngle = ((angle % 360) + 360) % 360;
     
-    // ⚡ พลิกแค่กล่องข้อความ .text-content 180 องศา (แท่งไม่ขยับ)
     let textContent = mainNeedle.querySelector('.text-content');
     if (textContent) {
         if (normalizedAngle > 90 && normalizedAngle < 270) {
@@ -440,25 +452,42 @@ function updateNeedle(id, did, d, dayOffset) {
     }
 }
 
-document.addEventListener('keydown', function(e) {
-    if (e.key === 'F12' || 
-       (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i' || e.key === 'C' || e.key === 'c')) || 
-       (e.ctrlKey && (e.key === 'U' || e.key === 'u'))) {
-        e.preventDefault();
-        return false;
-    }
-});
+// ⚡ จัดการ Event Listener ใหม่ สำหรับคำนวณและปุ่ม Enter ⚡
+const pDateEl = document.getElementById('p-date');
+const delayDaysEl = document.getElementById('delay-days');
+const tDateEl = document.getElementById('t-date');
 
-['w', 'p-date', 'delay-days', 't-date'].forEach(id => {
-    let inputField = document.getElementById(id);
-    if (inputField) {
-        inputField.addEventListener('keypress', function (e) {
-            if (e.key === 'Enter') {
-                e.preventDefault(); 
-                phase1(); 
+// เมื่อพิมพ์หรือเลื่อนเปลี่ยนค่า ให้คำนวณทันที
+pDateEl.addEventListener('change', () => {
+    if (delayDaysEl.value !== "") updateTDate();
+    else if (tDateEl.value !== "") updateDelayDays();
+});
+delayDaysEl.addEventListener('change', updateTDate);
+tDateEl.addEventListener('change', updateDelayDays);
+
+// เมื่อกดปุ่ม Enter
+[pDateEl, delayDaysEl, tDateEl].forEach(el => {
+    el.addEventListener('keypress', function (e) {
+        if (e.key === 'Enter') {
+            e.preventDefault(); // กันฟอร์ม submit
+            
+            // บังคับให้เบราว์เซอร์ blur (ออกจากการโฟกัสช่องกรอกข้อมูล)
+            // เพื่อให้ค่าอัปเดตแบบสมบูรณ์ชัวร์ๆ ก่อนจะรัน phase1
+            this.blur(); 
+            
+            // เช็คอีกรอบเพื่อความชัวร์
+            if (this.id === 'delay-days') {
+                updateTDate();
+            } else if (this.id === 't-date') {
+                updateDelayDays();
+            } else if (this.id === 'p-date') {
+                if (delayDaysEl.value !== "") updateTDate();
+                else updateDelayDays();
             }
-        });
-    }
+            
+            phase1(); 
+        }
+    });
 });
 
 let sActualField = document.getElementById('s-actual');
@@ -466,6 +495,7 @@ if (sActualField) {
     sActualField.addEventListener('keypress', function (e) {
         if (e.key === 'Enter') {
             e.preventDefault();
+            this.blur();
             phase2(); 
         }
     });
