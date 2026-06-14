@@ -17,14 +17,12 @@
             display: flex;
             align-items: flex-start;
         }
-        /* ⚡ ป้องกันการคลุมดำข้อความและรูปภาพ ⚡ */
         body {
             -webkit-user-select: none;
             -moz-user-select: none;
             -ms-user-select: none;
             user-select: none;
         }
-        /* ยกเว้นช่องกรอกข้อมูลให้ยังพิมพ์และแก้ตัวเลขได้ตามปกติ */
         input {
             -webkit-user-select: auto;
             user-select: auto;
@@ -61,7 +59,6 @@
             margin-left: 20px; 
         }
 
-        /* ⚡ แก้ไขปัญหาช่องกรอกข้อมูลใน iPad ไม่ชิดขอบและหน้าตาเพี้ยน ⚡ */
         input, button { 
             display: block; 
             width: 100%; 
@@ -90,25 +87,22 @@
             min-width: 600px; 
         }
 
-        /* 🌟 จัดให้วงกลมฐานอยู่เลเยอร์ 1 🌟 */
         #base {
             position: relative;
             z-index: 1;
         }
 
-        /* 🌟 ดันกล่องรวมเข็มขึ้นไปเลเยอร์ 2 🌟 */
         #needles {
             position: absolute;
             top: 0;
             left: 0;
             width: 600px;
             height: 600px;
-            z-index: 2; /* ให้อยู่เหนือวงกลมฐาน */
+            z-index: 2; 
         }
         
         .needle {
             position: absolute;
-            /* เอา z-index ตรงนี้ออกไปจัดการรายตัวดีกว่า */
             width: 20px;
             height: 350px; 
             left: 290px;
@@ -121,7 +115,6 @@
             opacity: 0;
         }
         
-        /* 🌟 จัดตำแหน่งกล่องวันที่ให้แสดงผลถูกทิศทางเสมอ */
         .date-box { 
             margin-bottom: 5px; 
             padding: 4px; 
@@ -131,9 +124,7 @@
             font-size: 11px; 
             font-weight: bold; 
             white-space: nowrap;
-            /* ทำให้กล่องวันที่หมุนอิสระจากเข็มได้ */
             transform-origin: center center;
-            /* 🌟 ให้กล่องวันที่เด้งทับแท่งเข็มเสมอ 🌟 */
             position: relative;
             z-index: 20; 
         }
@@ -147,13 +138,18 @@
             color: rgb(14, 13, 13);
             font-size: 12px;          
             font-weight: bold;
-            writing-mode: vertical-rl;
-            text-orientation: mixed; /* 👈 เพิ่มตรงนี้เพื่อแก้บั๊กตัวหนังสือตีลังกาใน iPad */
             border-radius: 5px;       
             box-shadow: 2px 2px 5px rgba(0,0,0,0.2); 
-            /* แท่งเข็มอยู่ข้างใต้กล่องวันที่ */
             position: relative;
             z-index: 10;
+        }
+
+        /* ⚡ กล่องสำหรับหมุนเฉพาะข้อความ ⚡ */
+        .text-content {
+            display: inline-block;
+            transition: transform 0.3s ease;
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
         }
         
         #center-pivot {
@@ -163,111 +159,29 @@
             left: 50%;         
             top: 50%; 
             transform: translate(-50%,-50%);
-            z-index: 100; /* น็อตตรงกลางต้องลอยสูงสุด */
+            z-index: 100; 
             object-fit: cover;
             filter: drop-shadow(0px 5px 10px rgba(0,0,0,0.3)); 
         }
 
-        .res-box { 
-            margin-top: 20px; 
-            padding: 15px; 
-            border-radius: 8px; 
-            border: 1px solid #ccc; 
-            background: #f9fafb; 
-            display: none; 
-            box-sizing: border-box;
-            width: 100%;            
-        }
-        
-        .res-item {
-            border-radius: 5px; 
-            padding: 8px; 
-            margin: 5px 0; 
-            box-sizing: border-box; 
-            width: 100%;
-        }
-
+        .res-box { margin-top: 20px; padding: 15px; border-radius: 8px; border: 1px solid #ccc; background: #f9fafb; display: none; box-sizing: border-box; width: 100%; }
+        .res-item { border-radius: 5px; padding: 8px; margin: 5px 0; box-sizing: border-box; width: 100%; }
         .warning-banner { background: #fee2e2; color: #991b1b; padding: 10px; border-radius: 6px; border: 2px solid #fca5a5; font-weight: bold; margin-bottom: 10px; text-align: center; box-sizing: border-box; width: 100%; }
-        
-        .side-effects-layout {
-            display: none;
-            width: 100%; 
-            margin-top: 20px;
-            padding: 15px;
-            background: #fff; 
-            border-left: 5px solid #ef4444; 
-            border-radius: 8px;
-            box-shadow: 0px 4px 10px rgba(0,0,0,0.05); 
-            color: #475569;
-            font-size: 14px;
-            line-height: 1.6;
-            box-sizing: border-box;
-        }
+        .side-effects-layout { display: none; width: 100%; margin-top: 20px; padding: 15px; background: #fff; border-left: 5px solid #ef4444; border-radius: 8px; box-shadow: 0px 4px 10px rgba(0,0,0,0.05); color: #475569; font-size: 14px; line-height: 1.6; box-sizing: border-box; }
+        .option-box { background: #f8fafc; border: 1px solid #cbd5e1; padding: 12px; border-radius: 8px; margin: 15px 0; box-sizing: border-box; }
+        .embossed-text { width: 100%; text-align: right; margin-top: 20px; margin-bottom: 20px; padding-right: 15px; font-size: 13px; font-weight: 500; color: #94a3b8; letter-spacing: 0.5px; box-sizing: border-box; }
 
-        .option-box {
-            background: #f8fafc;
-            border: 1px solid #cbd5e1;
-            padding: 12px;
-            border-radius: 8px;
-            margin: 15px 0;
-            box-sizing: border-box;
-        }
-        .embossed-text {
-            width: 100%;
-            text-align: right; 
-            margin-top: 20px; 
-            margin-bottom: 20px;
-            padding-right: 15px; 
-            font-size: 13px; 
-            font-weight: 500;
-            color: #94a3b8; 
-            letter-spacing: 0.5px;
-            box-sizing: border-box;
-        }
+        #n-orange { z-index: 10 !important; }
+        #n-magenta { z-index: 9 !important; }
 
-        /* 🌟🌟 ดันเข็มส้มเทาให้ลอยเหนือเข็มอันอื่น 🌟🌟 */
-        #n-orange {
-            z-index: 10 !important;
-        }
-        #n-magenta {
-            z-index: 9 !important;
-        }
-
-        /* ⚡ จัดการ Layout เฉพาะเมื่อหน้าจอเล็ก (มือถือ/ไอแพด) ไม่กระทบหน้าคอม ⚡ */
         @media (max-width: 1024px) {
-            body {
-                padding: 20px; 
-            }
-            .main-wrapper {
-                flex-direction: column; 
-                align-items: center;
-                gap: 30px;
-                padding-top: 20px;
-            }
-            .form-card {
-                width: 100%; 
-                max-width: 500px; 
-                height: auto; 
-                border-radius: 12px; 
-            }
-            .wheel-card {
-                width: 100%;
-                margin-left: 0;
-                position: relative;
-                top: 0;
-                padding: 0;
-                display: flex;
-                justify-content: center;
-                transform: scale(0.7); 
-                transform-origin: top center;
-                height: 450px;
-            }
+            body { padding: 20px; }
+            .main-wrapper { flex-direction: column; align-items: center; gap: 30px; padding-top: 20px; }
+            .form-card { width: 100%; max-width: 500px; height: auto; border-radius: 12px; }
+            .wheel-card { width: 100%; margin-left: 0; position: relative; top: 0; padding: 0; display: flex; justify-content: center; transform: scale(0.7); transform-origin: top center; height: 450px; }
         }
         @media (max-width: 500px) {
-            .wheel-card {
-                transform: scale(0.55); 
-                height: 350px;
-            }
+            .wheel-card { transform: scale(0.55); height: 350px; }
         }
     </style>
 </head>
@@ -316,18 +230,18 @@
                 <circle cx="300" cy="300" r="280" fill="rgb(255, 212, 222)" stroke="white" stroke-width="4"/>
             </svg>
             <div id="needles">
-                <div id="n-green" class="needle"><div class="date-box" id="d-green"></div><div class="needle-bar" style="background:#002d62;color:rgb(251, 249, 249)">5 วันก่อนประจำเดือนมา</div></div>
-                <div id="n-yellow" class="needle"><div class="date-box" id="d-yellow"></div><div class="needle-bar" style="background:hsl(212, 99%, 30%); color:rgb(251, 249, 249)">3 วันก่อนประจำเดือนมา</div></div>
-                <div id="n-red" class="needle"><div class="date-box" id="d-red"></div><div class="needle-bar" style="background:#ca5160;color:rgb(251, 249, 249)">วันที่ประจำเดือนมาปกติ</div></div>
-                <div id="n-cyan" class="needle"><div class="date-box" id="d-cyan"></div><div class="needle-bar" style="background:#01796F; color:rgb(255, 255, 255)">เริ่มรับประทานยาจริง</div></div>
+                <div id="n-green" class="needle"><div class="date-box" id="d-green"></div><div class="needle-bar" style="background:#002d62;color:rgb(251, 249, 249)"><div class="text-content">5 วันก่อนประจำเดือนมา</div></div></div>
+                <div id="n-yellow" class="needle"><div class="date-box" id="d-yellow"></div><div class="needle-bar" style="background:hsl(212, 99%, 30%); color:rgb(251, 249, 249)"><div class="text-content">3 วันก่อนประจำเดือนมา</div></div></div>
+                <div id="n-red" class="needle"><div class="date-box" id="d-red"></div><div class="needle-bar" style="background:#ca5160;color:rgb(251, 249, 249)"><div class="text-content">วันที่ประจำเดือนมาปกติ</div></div></div>
+                <div id="n-cyan" class="needle"><div class="date-box" id="d-cyan"></div><div class="needle-bar" style="background:#01796F; color:rgb(255, 255, 255)"><div class="text-content">เริ่มรับประทานยาจริง</div></div></div>
                 
                 <div id="n-orange" class="needle">
                     <div class="date-box" id="d-orange"></div>
-                    <div class="needle-bar" style="background:#db7c87; color:rgb(255, 255, 255);">วันหยุดรับประทานยา</div>
+                    <div class="needle-bar" style="background:#db7c87; color:rgb(255, 255, 255);transform:rotate(180deg);"><div class="text-content">วันหยุดรับประทานยา</div></div>
                 </div>
                 <div id="n-magenta" class="needle">
                     <div class="date-box" id="d-magenta"></div>
-                    <div class="needle-bar" style="background:#8c8383; color:rgb(255, 255, 255);">วันที่ประจำเดือนกลับมา</div>
+                    <div class="needle-bar" style="background:#8c8383; color:rgb(255, 255, 255);transform:rotate(180deg);"><div class="text-content">วันที่ประจำเดือนกลับมา</div></div>
                 </div>
             </div>
             <img id="center-pivot" src="A0B7FD69-E54B-40F6-9EA8-18514D5391A9.png" alt="ศูนย์กลาง">
@@ -344,6 +258,15 @@ for(let i=0; i<31; i++) {
     svg.innerHTML += `<line x1="${300+280*Math.cos((ang-90)*Math.PI/180)}" y1="${300+280*Math.sin((ang-90)*Math.PI/180)}" x2="${300+250*Math.cos((ang-90)*Math.PI/180)}" y2="${300+250*Math.sin((ang-90)*Math.PI/180)}" stroke="white" stroke-width="2"/>`;
 }
 
+// ฟังก์ชันแปลงวันที่ให้เวลาเป็นเที่ยงคืนตรง เพื่อลดปัญหา Timezone ปัดเศษวันเพี้ยน
+function getCleanDate(dateString) {
+    if (!dateString) return null;
+    let parts = dateString.split('-');
+    let d = new Date(parts[0], parts[1] - 1, parts[2]);
+    d.setHours(0, 0, 0, 0); 
+    return d;
+}
+
 function formatDateForInput(d) {
     let month = '' + (d.getMonth() + 1);
     let day = '' + d.getDate();
@@ -358,7 +281,7 @@ function updateTDate() {
     const delay = parseInt(document.getElementById('delay-days').value);
     
     if (pInput && !isNaN(delay)) {
-        let p = new Date(pInput);
+        let p = getCleanDate(pInput);
         p.setDate(p.getDate() + delay); 
         document.getElementById('t-date').value = formatDateForInput(p);
     }
@@ -369,8 +292,8 @@ function updateDelayDays() {
     const tInput = document.getElementById('t-date').value;
     
     if (pInput && tInput) {
-        let p = new Date(pInput);
-        let t = new Date(tInput);
+        let p = getCleanDate(pInput);
+        let t = getCleanDate(tInput);
         let diffDays = Math.round((t - p) / 864e5); 
         document.getElementById('delay-days').value = diffDays;
     }
@@ -389,11 +312,18 @@ function phase1() {
         return alert("กรุณาใส่วันที่ประจำเดือนมาปกติ และ วันที่อยากให้ประจำเดือนมา ให้ครบก่อนนะคะ");
     }
     
-    const p = new Date(pInput);
-    const t = new Date(tInput);
-    const orangeDate = new Date(t.getTime() - 2 * 864e5); 
+    const p = getCleanDate(pInput);
+    const t = getCleanDate(tInput);
     
-    document.getElementById('gold-window').innerText = `ช่วงที่ควรรับประทานยา:\n ${fDate(new Date(p.getTime()-5*864e5))} ถึง ${fDate(new Date(p.getTime()-3*864e5))}`;
+    const orangeDate = new Date(t);
+    orangeDate.setDate(t.getDate() - 2); 
+    
+    const windowStart = new Date(p);
+    windowStart.setDate(p.getDate() - 5);
+    const windowEnd = new Date(p);
+    windowEnd.setDate(p.getDate() - 3);
+
+    document.getElementById('gold-window').innerText = `ช่วงที่ควรรับประทานยา:\n ${fDate(windowStart)} ถึง ${fDate(windowEnd)}`;
     document.getElementById('p2').style.display = 'block';
     
     document.getElementById('n-green').style.opacity = '1';
@@ -403,10 +333,11 @@ function phase1() {
     document.getElementById('n-magenta').style.opacity = '1';
     document.getElementById('n-cyan').style.opacity = '0';
     
-    const getDiff = (d) => (d - p) / 864e5;
+    // ฟังก์ชันคำนวณส่วนต่างวันให้แม่นยำ
+    const getDiff = (d) => Math.round((d.getTime() - p.getTime()) / 864e5);
     
-    updateNeedle('n-green', 'd-green', new Date(p.getTime() - 5*864e5), -5);
-    updateNeedle('n-yellow', 'd-yellow', new Date(p.getTime() - 3*864e5), -3);
+    updateNeedle('n-green', 'd-green', windowStart, -5);
+    updateNeedle('n-yellow', 'd-yellow', windowEnd, -3);
     updateNeedle('n-red', 'd-red', p, 0); 
     updateNeedle('n-orange', 'd-orange', orangeDate, getDiff(orangeDate)); 
     updateNeedle('n-magenta', 'd-magenta', t, getDiff(t)); 
@@ -422,8 +353,8 @@ function phase1() {
 
 function phase2() {
     const w = parseFloat(document.getElementById('w').value);
-    const p = new Date(document.getElementById('p-date').value);
-    const t = new Date(document.getElementById('t-date').value);
+    const pInput = document.getElementById('p-date').value;
+    const tInput = document.getElementById('t-date').value;
     const sInput = document.getElementById('s-actual').value;
     
     if(!sInput) {
@@ -431,16 +362,32 @@ function phase2() {
         return;
     }
     
-    const s = new Date(sInput); 
-    const orangeDate = new Date(t.getTime() - 2 * 864e5); 
+    const p = getCleanDate(pInput);
+    const t = getCleanDate(tInput);
+    const s = getCleanDate(sInput); 
+    
+    const orangeDate = new Date(t);
+    orangeDate.setDate(t.getDate() - 2); 
+    
     const dose = (w >= 60 ? 3 : 2);
     
-    let pills = 0;
-    if (orangeDate >= s) {
-        pills = (Math.round((orangeDate - s) / 864e5) + 1) * dose;
+    let totalDelayDays = 0;
+    if (t >= p) {
+         totalDelayDays = Math.round((t - p) / 864e5);
     }
+    
+    let days = 0;
+    if (orangeDate >= s) {
+        // คำนวณแบบตรงไปตรงมา: วันหยุดยา ลบ วันเริ่มกินยา จะได้จำนวนวันที่ต้องกินพอดี
+        // (เช่น เริ่ม 17 หยุด 24 -> 24 - 17 = 7 วัน)
+        days = Math.floor((orangeDate.getTime() - s.getTime()) / 864e5); 
+    }
+    
+    let pills = days * dose;
 
-    const limitDate = new Date(p.getTime() - 3 * 864e5);
+    const limitDate = new Date(p);
+    limitDate.setDate(p.getDate() - 3);
+
     let warningHTML = "";
     
     if (s > limitDate) {
@@ -449,8 +396,11 @@ function phase2() {
     }
     
     document.getElementById('res').style.display = 'block';
+    
     document.getElementById('res').innerHTML = `
         ${warningHTML}
+        <div class="res-item" style="background:#e0f2fe; color:#0369a1; font-weight:bold;">สรุป: ต้องการเลื่อนประจำเดือนทั้งหมด ${totalDelayDays} วัน</div>
+        <div class="res-item" style="background:#FFFFFF; color:#002d62;"><b>จำนวนวันที่ต้องกินยา:</b> ${days} วัน</div>
         <div class="res-item" style="background:#FFFFFF; color:#002d62;"><b>จำนวนเม็ดยา:</b> ${pills} เม็ด</div>
         <div class="res-item" style="background:#FFFFFF; color:#002d62;"><b>วิธีทาน:</b> ${dose} เม็ด/วัน</div>
         <div class="res-item" style="background:#c8ead1; color:#235D3A; font-size:16px;"><b>วันที่เริ่มกินยาจริง</b>: ${fDate(s)}</div>
@@ -464,24 +414,29 @@ function phase2() {
     document.getElementById('n-yellow').style.opacity = '0';
     document.getElementById('n-cyan').style.opacity = '1';
     
-    const getDiff = (d) => (d - p) / 864e5;
+    const getDiff = (d) => Math.round((d.getTime() - p.getTime()) / 864e5);
     updateNeedle('n-cyan', 'd-cyan', s, getDiff(s)); 
 }
 
 function updateNeedle(id, did, d, dayOffset) {
     let angle = dayOffset * (360/31);
-    document.getElementById(id).style.transform = `rotate(${angle}deg)`;
+    let mainNeedle = document.getElementById(id);
+    mainNeedle.style.transform = `rotate(${angle}deg)`;
     
     let dateBox = document.getElementById(did);
     dateBox.innerText = fDate(d);
-    dateBox.style.transform = `rotate(${-angle}deg)`;
+    dateBox.style.transform = `rotate(${-angle}deg)`; 
     
     let normalizedAngle = ((angle % 360) + 360) % 360;
-    let needleBar = document.querySelector(`#${id} .needle-bar`);
-    if (normalizedAngle > 90 && normalizedAngle < 270) {
-        needleBar.style.transform = "rotate(180deg)";
-    } else {
-        needleBar.style.transform = "rotate(0deg)";
+    
+    // ⚡ พลิกแค่กล่องข้อความ .text-content 180 องศา (แท่งไม่ขยับ)
+    let textContent = mainNeedle.querySelector('.text-content');
+    if (textContent) {
+        if (normalizedAngle > 90 && normalizedAngle < 270) {
+            textContent.style.transform = "rotate(180deg)"; 
+        } else {
+            textContent.style.transform = "rotate(0deg)";
+        }
     }
 }
 
@@ -493,26 +448,25 @@ document.addEventListener('keydown', function(e) {
         return false;
     }
 });
-// 🌟 1. ดักฟังการกด Enter สำหรับ "ขั้นที่ 1" (กลุ่มช่องกรอกข้อมูลด้านบน)
+
 ['w', 'p-date', 'delay-days', 't-date'].forEach(id => {
     let inputField = document.getElementById(id);
     if (inputField) {
         inputField.addEventListener('keypress', function (e) {
             if (e.key === 'Enter') {
-                e.preventDefault(); // ป้องกันเบราว์เซอร์รีเฟรชหน้าเว็บ
-                phase1(); // สั่งรันขั้นที่ 1
+                e.preventDefault(); 
+                phase1(); 
             }
         });
     }
 });
 
-// 🌟 2. ดักฟังการกด Enter สำหรับ "ขั้นที่ 2" (ช่องเลือกวันเริ่มกินยาจริง)
 let sActualField = document.getElementById('s-actual');
 if (sActualField) {
     sActualField.addEventListener('keypress', function (e) {
         if (e.key === 'Enter') {
             e.preventDefault();
-            phase2(); // สั่งรันขั้นที่ 2
+            phase2(); 
         }
     });
 }
